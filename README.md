@@ -1,18 +1,17 @@
-# ![#c5f015](https://placehold.it/15/c5f015/000000?text='') frontend-tool
+# ![#c5f015](https://placehold.it/15/c5f015/000000?text='') Скрипт Яндекс Карта
 
-## Инструмент для начинающих разработчиков frontend.
+## Проект создавал на своём  [проекте для GULP сборки](https://github.com/vlad-74/frontend-tool)
 
-### Проект создавал на WINDOWS / NODEJSv8.0.0 / GULP CLI v1.4.0 || Local v4.0.0-alpha.2 / WEBPACKv1.12.11
+## Проект создавал на WINDOWS / NODEJS v8.9.4/ GULP CLI v1.4.0 || Local v4.0.0-alpha.2 / WEBPACKv1.12.11
 
-### Запускается из командной строки командами - `gulp dev` или `gulp prod`;
+## Если Ваш глобальный GULP не 4 версии - npm uninstall -g gulp / npm install -g "gulpjs/gulp#4.0"
+
+### Проект стартует - `npm i`
+
+### Проект запускать из командной строки - `gulp dev` или `gulp prod`;
 
 ### gulp dev вызывает батник с командами : set "NODE_ENV=development" и gulp dev_replace&gulp develop;
 
 ### gulp prod вызывает батник с командами : set "NODE_ENV=prod" и gulp prod_replace&gulp develop;
 
-#### 1. В режиме dev реализованы: logger || .styl =>.css || sourcemaps || спрайт из картинок|| browserSync - `перезагрузка при изменениях`
-
-#### 3. В режиме prod реализованы: .styl =>.css || спрайт из картинок  || минимизация || `добавление хеша в название файлов || прописывание путей с хешом в html файле`
-
-#### 3. browserSync откроет проект в `chrome` и `firefox`. browserSync синхранизирует действия в `chrome` и `firefox` !!!
-#### 4. У `firefox` нормальный встроенный DEBUGGER!!!
+#### browserSync откроет проект в `Chrome`
