@@ -16,8 +16,8 @@ textarea { width: 448px; border-radius: 10px;}
 #save {background: #d9345d; border-radius: 10px; color: #ffffff; font-size: 12pt;  padding: 5px 10px text-decoration: none; cursor: pointer; }
 #save:hover { background: #fc3c73; text-decoration: none; cursor: pointer; }
 #save[disabled] { cursor: default; background-color: grey; }
+#map1 { width: 100%; height: 100%; }
 `
-
 document.getElementsByTagName('head')[0].appendChild(cssStyle);
 
 var s2 = document.createElement('script');
@@ -32,41 +32,65 @@ s.async = false;
 s.src =  'https://yandex.st/jquery/2.2.3/jquery.min.js';
 document.getElementsByTagName('head')[0].appendChild(s);
 
-setTimeout(() => {
-  ymaps.ready(init);
-}, 500);
+setTimeout(() => { ymaps.ready(init);}, 500);
 
 function init () {
     var myMap = new ymaps.Map('map', {
-            center: [55.76, 37.64],
-            zoom: 10
-        }, {
-            searchControlProvider: 'yandex#search'
-        }),
-        objectManager = new ymaps.ObjectManager({
-            // Чтобы метки начали кластеризоваться, выставляем опцию.
-            clusterize: true,
-            // ObjectManager принимает те же опции, что и кластеризатор.
-            gridSize: 32,
-            clusterDisableClickZoom: false,
-            geoObjectOpenBalloonOnClick: false,
-            clusterOpenBalloonOnClick: false
-        });
+        center: [55.76, 37.64],
+        zoom: 10
+    }, {
+        searchControlProvider: 'yandex#search'
+    }),
+    myMap1 = new ymaps.Map('map1', {
+        center: [55.76, 37.64],
+        zoom: 10
+    }, {
+        searchControlProvider: 'yandex#search'
+    }),
+
+    objectManager = new ymaps.ObjectManager({
+        // Чтобы метки начали кластеризоваться, выставляем опцию.
+        clusterize: true,
+        // ObjectManager принимает те же опции, что и кластеризатор.
+        gridSize: 32,
+        clusterDisableClickZoom: false,
+
+        geoObjectOpenBalloonOnClick: false,
+        clusterOpenBalloonOnClick: false
+    }),
+    objectManager1 = new ymaps.ObjectManager({
+        // Чтобы метки начали кластеризоваться, выставляем опцию.
+        clusterize: true,
+        // ObjectManager принимает те же опции, что и кластеризатор.
+        gridSize: 32,
+        clusterDisableClickZoom: false,
+
+        geoObjectOpenBalloonOnClick: false,
+        clusterOpenBalloonOnClick: false
+    });
 
     objectManager.objects.events.add(['click'], onObjectEvent);
     objectManager.clusters.events.add(['click'], onClusterEvent);
+
+    objectManager1.objects.events.add(['click'], onObjectEvent);
+    objectManager1.clusters.events.add(['click'], onClusterEvent);
 
     // Чтобы задать опции одиночным объектам и кластерам,
     // обратимся к дочерним коллекциям ObjectManager.
     objectManager.objects.options.set('preset', 'islands#greenDotIcon');
     objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
 
+    objectManager1.objects.options.set('preset', 'islands#greenDotIcon');
+    objectManager1.clusters.options.set('preset', 'islands#greenClusterIcons');
+
     myMap.geoObjects.add(objectManager);
+    myMap1.geoObjects.add(objectManager1);
 
     $.ajax({
         url: './data.json'
     }).done(function(data) {
         objectManager.add(data);
+        objectManager1.add(data);
     });
 
     function onObjectEvent (e) {
@@ -88,6 +112,16 @@ function init () {
     }
 
     function closeModal () {
+        let inputs = document.getElementsByTagName('input'),i=0;
+        for (let i = 0; i < inputs.length; i++) { 
+            inputs[i].removeEventListener('keydown', unblock, false);
+        }
+
+        let textar = document.getElementsByTagName('textarea'),j=0;
+        for (let j = 0; j < textar.length; j++) { 
+            textar[j].removeEventListener('keydown', unblock, false);
+        }
+
         var elements = document.getElementsByClassName('modal');
         while(elements.length > 0){
             elements[0].parentNode.removeChild(elements[0]);
