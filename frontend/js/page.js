@@ -2,6 +2,7 @@ var cssStyle = document.createElement('style');
 cssStyle.type = 'text/css';
 cssStyle.innerHTML = `
 html, body, #map { width: 100%; height: 100%; padding: 0; margin: 0; font-family: Verdana, Arial, Helvetica, sans-serif;} 
+#map { min-width: 320px; min-height: 480px; }
 p { text-align: center; font-size: 16pt; }
 label { width: 100px; font-size: 12pt; }
 input { width: 450px; border-radius: 7px; font-size: 11pt; }
@@ -16,7 +17,7 @@ textarea { width: 448px; border-radius: 10px;}
 #save {background: #d9345d; border-radius: 10px; color: #ffffff; font-size: 12pt;  padding: 5px 10px text-decoration: none; cursor: pointer; }
 #save:hover { background: #fc3c73; text-decoration: none; cursor: pointer; }
 #save[disabled] { cursor: default; background-color: grey; }
-#map1 { width: 100%; height: 100%; }
+#map1 { width: 100%; height: 100%;  min-width: 320px; min-height: 480px; }
 `
 document.getElementsByTagName('head')[0].appendChild(cssStyle);
 
@@ -41,13 +42,6 @@ function init () {
     }, {
         searchControlProvider: 'yandex#search'
     }),
-    myMap1 = new ymaps.Map('map1', {
-        center: [55.76, 37.64],
-        zoom: 10
-    }, {
-        searchControlProvider: 'yandex#search'
-    }),
-
     objectManager = new ymaps.ObjectManager({
         // Чтобы метки начали кластеризоваться, выставляем опцию.
         clusterize: true,
@@ -57,6 +51,21 @@ function init () {
 
         geoObjectOpenBalloonOnClick: false,
         clusterOpenBalloonOnClick: false
+    });
+    objectManager.objects.events.add(['click'], onObjectEvent);
+    objectManager.clusters.events.add(['click'], onClusterEvent);
+
+    // Чтобы задать опции одиночным объектам и кластерам,
+    // обратимся к дочерним коллекциям ObjectManager.
+    objectManager.objects.options.set('preset', 'islands#greenDotIcon');
+    objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+    myMap.geoObjects.add(objectManager);
+
+    var myMap1 = new ymaps.Map('map1', {
+        center: [55.76, 37.64],
+        zoom: 10
+    }, {
+        searchControlProvider: 'yandex#search'
     }),
     objectManager1 = new ymaps.ObjectManager({
         // Чтобы метки начали кластеризоваться, выставляем опцию.
@@ -68,22 +77,10 @@ function init () {
         geoObjectOpenBalloonOnClick: false,
         clusterOpenBalloonOnClick: false
     });
-
-    objectManager.objects.events.add(['click'], onObjectEvent);
-    objectManager.clusters.events.add(['click'], onClusterEvent);
-
     objectManager1.objects.events.add(['click'], onObjectEvent);
     objectManager1.clusters.events.add(['click'], onClusterEvent);
-
-    // Чтобы задать опции одиночным объектам и кластерам,
-    // обратимся к дочерним коллекциям ObjectManager.
-    objectManager.objects.options.set('preset', 'islands#greenDotIcon');
-    objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
-
     objectManager1.objects.options.set('preset', 'islands#greenDotIcon');
     objectManager1.clusters.options.set('preset', 'islands#greenClusterIcons');
-
-    myMap.geoObjects.add(objectManager);
     myMap1.geoObjects.add(objectManager1);
 
     $.ajax({
@@ -92,6 +89,9 @@ function init () {
         objectManager.add(data);
         objectManager1.add(data);
     });
+
+    // console.log(myMap.getZoom();
+    // myMap.center = myMap.getBounds();
 
     function onObjectEvent (e) {
         var objectId = e.get('objectId');
