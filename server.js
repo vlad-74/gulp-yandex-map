@@ -10,7 +10,4 @@ debugger; // остановка!!!!!!!!!
   file.serve(request, response);
 }).listen(3000);
 
-
-setTimeout(function(){
-	open("http://127.0.0.1:3000");
-}, 2000)
+setTimeout(function(){ open("http://127.0.0.1:3000");}, 2000);

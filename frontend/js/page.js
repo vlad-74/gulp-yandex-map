@@ -36,13 +36,7 @@ document.getElementsByTagName('head')[0].appendChild(s);
 setTimeout(() => { ymaps.ready(init);}, 500);
 
 function init () {
-    var myMap = new ymaps.Map('map', {
-        center: [55.76, 37.64],
-        zoom: 10
-    }, {
-        searchControlProvider: 'yandex#search'
-    }),
-    objectManager = new ymaps.ObjectManager({
+    var objectManager = new ymaps.ObjectManager({
         // Чтобы метки начали кластеризоваться, выставляем опцию.
         clusterize: true,
         // ObjectManager принимает те же опции, что и кластеризатор.
@@ -52,6 +46,7 @@ function init () {
         geoObjectOpenBalloonOnClick: false,
         clusterOpenBalloonOnClick: false
     });
+
     objectManager.objects.events.add(['click'], onObjectEvent);
     objectManager.clusters.events.add(['click'], onClusterEvent);
 
@@ -59,40 +54,16 @@ function init () {
     // обратимся к дочерним коллекциям ObjectManager.
     objectManager.objects.options.set('preset', 'islands#greenDotIcon');
     objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+
     myMap.geoObjects.add(objectManager);
-
-    var myMap1 = new ymaps.Map('map1', {
-        center: [55.76, 37.64],
-        zoom: 10
-    }, {
-        searchControlProvider: 'yandex#search'
-    }),
-    objectManager1 = new ymaps.ObjectManager({
-        // Чтобы метки начали кластеризоваться, выставляем опцию.
-        clusterize: true,
-        // ObjectManager принимает те же опции, что и кластеризатор.
-        gridSize: 32,
-        clusterDisableClickZoom: false,
-
-        geoObjectOpenBalloonOnClick: false,
-        clusterOpenBalloonOnClick: false
-    });
-    objectManager1.objects.events.add(['click'], onObjectEvent);
-    objectManager1.clusters.events.add(['click'], onClusterEvent);
-    objectManager1.objects.options.set('preset', 'islands#greenDotIcon');
-    objectManager1.clusters.options.set('preset', 'islands#greenClusterIcons');
-    myMap1.geoObjects.add(objectManager1);
 
     $.ajax({
         url: './data.json'
     }).done(function(data) {
         objectManager.add(data);
-        objectManager1.add(data);
     });
-
-    // console.log(myMap.getZoom();
-    // myMap.center = myMap.getBounds();
-
+    
+    var myMap = new ymaps.Map('map', {center: [55.76, 37.64], zoom: 10}, {searchControlProvider: 'yandex#search'});
     function onObjectEvent (e) {
         var objectId = e.get('objectId');
         modalWindow(objectId, e.originalEvent.currentTarget._objectsById);
@@ -101,13 +72,9 @@ function init () {
     function onClusterEvent (e) {
         var objectId = e.get('objectId');
         if (e.get('type') == 'mouseenter') {
-            objectManager.clusters.setClusterOptions(objectId, {
-                preset: 'islands#yellowClusterIcons'
-            });
+            objectManager.clusters.setClusterOptions(objectId, { preset: 'islands#yellowClusterIcons'});
         } else {
-            objectManager.clusters.setClusterOptions(objectId, {
-                preset: 'islands#blueClusterIcons'
-            });
+            objectManager.clusters.setClusterOptions(objectId, { preset: 'islands#blueClusterIcons' });
         }
     }
 
