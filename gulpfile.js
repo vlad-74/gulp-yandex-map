@@ -89,7 +89,12 @@ const wbpck = function(callback) {
       {
           test: /\.json$/,
           loader: 'json-loader'
-      }]
+      },
+      {
+        test: /\.html$/,
+        loader: "html-loader"
+      }
+      ]
     },
     plugins: [
       new webpack.NoErrorsPlugin() // otherwise error still gives a file
